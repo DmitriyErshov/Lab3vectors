@@ -24,18 +24,23 @@ class BooksContainer {
 private:
 	vector<Book> container;
 	sortedParam sortedBy = none;
+	int id = 1;
 public:
+	void resetId() {
+		id = 1;
+	}
 	//добавление 
 	void add(Book &book) {
+		book.setId(id++);
 		container.push_back(book);
 	}
 
 	//редактирование
-	void edit(Book &book, Book &newBook) {
+	void edit(int id, Book &newBook) {
 		int editIndex = 0;
 		for (int i = 0; i < container.size(); i++)
 		{
-			if (container[i] == book) {
+			if (container[i].getId() == id) {
 				editIndex = i;
 				break;
 			}
@@ -58,6 +63,52 @@ public:
 		container.erase(container.begin() + deleteIndex);
 	}
 
+	//удаление
+	void remove(int id) {
+		int deleteIndex = 0;
+		for (int i = 0; i < container.size(); i++)
+		{
+			if (container[i].getId() == id) {
+				deleteIndex = i;
+				break;
+			}
+		}
+
+		container.erase(container.begin() + deleteIndex);
+	}
+
+	void borrowBook(int idReader, int idBook) {
+		for (int i = 0; i < container.size(); i++)
+		{
+			if (container[i].getId() == idBook) {
+				if (container[i].getIdReaders() == -1) {
+					container[i].setIdReaders(idReader);
+				}
+				else {
+					//книга у кого-то на руках
+					throw exception();
+				}
+				
+			}
+		}
+	}
+
+	void returnBook(int idReader, int idBook) {
+		for (int i = 0; i < container.size(); i++)
+		{
+			if (container[i].getId() == idBook) {
+				
+				if (container[i].getIdReaders() == idReader) {
+					container[i].setIdReaders(-1);
+				}
+				else {
+					//книга принадлежит другому юзеру 
+					throw exception();
+				}
+			}
+		}
+	}
+
 	//вывод контейнера
 	void printToTheConsole() {
 		ostream_iterator<Book> cout_it(cout, " ");
@@ -68,6 +119,118 @@ public:
 		ostream_iterator<Book> cout_it(cout, " ");
 
 		copy(begin, end, cout_it);
+	}
+
+	void writeStr(const string& s, ofstream& f)
+	{
+		int l = s.length();
+		f.write((char*)&l, sizeof(int));
+		f.write(s.data(), l);
+	}
+
+	void readStr(string& s, ifstream& f)
+	{
+		int l;
+		f.read((char*)&l, sizeof(int));
+		char* str = new char[l + 1];
+		f.read(str, l);
+		str[l] = 0;
+		s = str;
+		delete[] str;
+	}
+	
+	void printToFile(string fileName) {	
+		std::ofstream fout(fileName, std::ios::out | std::ios::binary);
+
+		//Запишем кол-во записей
+		int n = container.size();
+		fout.write((char*)&n, sizeof(int)); // Запись POD-члена
+
+		for (size_t i = 0; i < container.size(); i++)
+		{
+			int tempInt;
+			string tempStr;
+
+			tempInt = container[i].getId();
+			fout.write((char*)&tempInt, sizeof(int)); // Запись POD-члена
+
+			tempInt = container[i].getIdReaders();
+			fout.write((char*)&tempInt, sizeof(int)); // Запись POD-члена
+
+			tempStr = container[i].getIssuingBookDate();
+			writeStr(tempStr, fout);
+
+			tempStr = container[i].getBookDeadline();
+			writeStr(tempStr, fout);
+
+			tempStr = container[i].getAuthor();
+			writeStr(tempStr, fout);
+
+			tempStr = container[i].getName();
+			writeStr(tempStr, fout);
+
+			tempStr = container[i].getPublicationDate();
+			writeStr(tempStr, fout);
+
+			tempStr = container[i].getPublisher();
+			writeStr(tempStr, fout);
+
+			tempInt = container[i].getPrice();
+			fout.write((char*)&tempInt, sizeof(int)); // Запись POD-члена
+		}
+
+		fout.close();
+	}
+
+	void readFromFile(string fileName) {
+		ifstream ifile(fileName, ios::binary);
+		Book temp;
+
+		//считаем кол-во записей
+		int n;
+		ifile.read((char*)&n, sizeof(int));
+
+		for (size_t i = 0; i < n; i++)
+		{
+			int tempInt;
+			string tempStr;
+
+			ifile.read((char*)&tempInt, sizeof(int));   // Чтение POD-члена
+			temp.setId(tempInt);
+			//редактируем id контейнера
+			id = tempInt + 1;
+
+			ifile.read((char*)&tempInt, sizeof(int));   // Чтение POD-члена
+			temp.setIdReaders(tempInt);
+
+			readStr(tempStr, ifile);
+			temp.setIssuingBookDate(tempStr);
+
+			readStr(tempStr, ifile);
+			temp.setBookDeadline(tempStr);
+
+			readStr(tempStr, ifile);
+			temp.setAuthor(tempStr);
+
+			readStr(tempStr, ifile);
+			temp.setName(tempStr);
+
+			readStr(tempStr, ifile);
+			temp.setPublicationDate(tempStr);
+
+			readStr(tempStr, ifile);
+			temp.setPublisher(tempStr);
+
+			ifile.read((char*)&tempInt, sizeof(tempInt));   // Чтение POD-члена
+			temp.setPrice(tempInt);
+
+			container.push_back(temp);
+		}
+
+		ifile.close();
+		
+
+		
 	}
 
 
@@ -96,13 +259,6 @@ public:
 		return result;
 	}
 
-	vector<Book> findByClientSecondName(string secondName) {
-		vector<Book> result;
-		
-		copy_if(container.begin(), container.end(), result.begin(), [&secondName](Book& b) {return b.getClientSecondName() == secondName; });
-
-		return result;
-	}
 
 	vector<Book> findByAuthor(string author) {
 		vector<Book> result;

@@ -1,7 +1,8 @@
 #pragma once
 #include "utills.h"
 #include "Reader.h"
-#include "Book.h"
+//#include "Book.h"
+//#include "BooksContainer.h"
 
 struct bookLogRecord{
 	int bookId;
@@ -17,12 +18,12 @@ class Librarian
 	vector<Reader> readers;
 
 	//книги
-	vector<Book> books;
+	/*BooksContainer books;
 	
-	Librarian(vector<Reader> &readers, vector<Book>& books) {
+	Librarian(vector<Reader> &readers, BooksContainer& books) {
 		this->readers = readers;
 		this->books = books;
-	}
+	}*/
 
 	//регистрация читателя
 	void addReader();

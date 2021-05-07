@@ -8,13 +8,6 @@ bool operator==(const Book& left, const Book& right)
 
 istream& operator>>(istream& in, Book& book)
 {
-    cout << "Введите id читательсокго билета: ";
-    in >> book.id;
-    char k = getchar();
-
-    cout << "Введите фамилию абонента: ";
-    getline(in, book.clientSecondName);
-
     cout << "Введите дату выдачи: ";
     getline(in, book.issuingBookDate);
 
@@ -36,15 +29,22 @@ istream& operator>>(istream& in, Book& book)
     cout << "Введите цену: ";
     in >> book.price;
 
-    k = getchar();
+    char k = getchar();
 
     return in;
 }
 
 ostream& operator<<(ostream& out, const Book& book)
 {
-    out << "Читательский билет №: " << book.id << endl;
-    out << "Фамилия абонента: " << book.clientSecondName << endl;
+    out << "id книги: " << book.id << endl;
+    if (book.idReaders == -1) {
+        out << "Книга свободна ";
+    }
+    else {
+        out << "Книга на руках у читателя с id : " << book.idReaders;
+    }
+    out << endl;
+
     out << "Дата выдачи: " << book.issuingBookDate << endl;
     out << "Срок возврата: " << book.returnBookDeadline << endl;
     out << "Автор: " << book.author << endl;
@@ -52,6 +52,6 @@ ostream& operator<<(ostream& out, const Book& book)
     out << "Год издания: " << book.publicationDate << endl;
     out << "Издательство: " << book.publisher << endl;
     out << "Цена: " << book.price << endl;
-
+    out << "----------------------------------" << endl;
     return out;
 }
