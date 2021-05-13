@@ -7,6 +7,18 @@ struct recordBorrowBook {
 	bool onHand = true;
 };
 
+ostream& operator<<(ostream& out, const recordBorrowBook& rec)
+{
+	out << "читатель с id " << rec.idReader;
+	
+	rec.onHand == false ? out << " вернул " : out << " взял ";
+
+	out	<< " книгу с id " << rec.idBook << endl << endl;
+
+	return out;
+}
+
+
 class BooksBorrowings {
 private:
 	vector<recordBorrowBook> container;
@@ -28,7 +40,7 @@ public:
 	}
 
 	void printToTheConsole() {
-		ostream_iterator<Book> cout_it(cout, " ");
+		ostream_iterator<recordBorrowBook> cout_it(cout, " ");
 		copy(container.begin(), container.end(), cout_it);
 	}
 
@@ -37,6 +49,7 @@ public:
 
 		//Запишем кол-во записей
 		int n = container.size();
+		fout.write((char*)&n, sizeof(int)); // Запись POD-члена
 
 		recordBorrowBook tempRec;
 		for (size_t i = 0; i < container.size(); i++)

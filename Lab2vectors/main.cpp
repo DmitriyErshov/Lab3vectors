@@ -37,6 +37,12 @@ int main() {
 	catch (std::bad_alloc& e) {
 		books.resetId();
 	}
+	try {
+		borrowingsHystory.readFromFile("booksLog.bin");
+	}
+	catch (std::bad_alloc& e) {
+		
+	}
 	
 	int mode = -1;
 	
@@ -228,13 +234,14 @@ int main() {
 				case 3:
 					int bookId;
 					//Посмотреть историю выдачи книги
-					//borrowingsHystory.printToTheConsole();
+					borrowingsHystory.printToTheConsole();
 
 					break;
 				//сохранить изменения в файле
 				case 4:
 					books.printToFile("books.bin");
 					readers.printToFile("readers.bin");
+					borrowingsHystory.printToFile("booksLog.bin");
 					break;
 				default:
 					break;
