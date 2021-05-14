@@ -16,9 +16,20 @@ bool compByPublisher(Book& left, Book& right) {
 	return left.getPublisher() < right.getPublisher();
 }
 
+bool compByName(Book& left, Book& right) {
+	return left.getName() < right.getName();
+}
+
+template<typename T>
+constexpr bool is_int =
+std::is_same<T, int>::value;
+
+template<typename T>
+constexpr bool is_string =
+std::is_same<T, string>::value;
 
 
-enum sortedParam { id , author, publisher, none };
+enum sortedParam { id , author, publisher, name, none };
 
 class BooksContainer {
 private:
@@ -276,30 +287,12 @@ public:
 		return result;
 	}
 
-
-
-	static string getParam(sortedParam sortparamType, Book& book) {
-		string result = "";
-		switch (sortparamType)
-		{
-			case author:
-				result = book.getAuthor();
-				break;
-			case publisher:
-				result = book.getPublisher();
-				break;
-			default:
-				break;
-		}
-		return result;
-	}
-
-	template<class T>
+	template<class T, class = std::enable_if_t<is_int<T>>>
 	static T getParam(sortedParam sortparamType, Book& book) {
 		T result;
 		switch (sortparamType)
 		{
-		case id:
+		case sortedParam::id:
 			result = book.getId();
 			break;
 		default:
@@ -307,6 +300,28 @@ public:
 		}
 		return result;
 	}
+
+	template<class T>
+	static T getParam(sortedParam sortparamType, Book& book) {
+		string result = "";
+		switch (sortparamType)
+		{
+		case sortedParam::author:
+				result = book.getAuthor();
+				break;
+		case sortedParam::publisher:
+				result = book.getPublisher();
+				break;
+		case sortedParam::name:
+				result = book.getName();
+				break;
+			default:
+				break;
+		}
+		return result;
+	}
+
+	
 
 	template<class T>
 	vector<Book> findByWithBinarySearch(T sortparam, sortedParam sortparamType) {
@@ -324,6 +339,9 @@ public:
 				break;
 			case publisher:
 				cmpPtr = compByPublisher;
+				break;
+			case name:
+				cmpPtr = compByName;
 				break;
 			default:
 				break;

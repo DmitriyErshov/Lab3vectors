@@ -151,6 +151,7 @@
     <ClInclude Include="BooksContainer.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="Librarian.h" />
+    <ClInclude Include="menu.h" />
     <ClInclude Include="Reader.h" />
     <ClInclude Include="ReadersContainer.h" />
     <ClInclude Include="utills.h" />
