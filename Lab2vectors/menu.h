@@ -55,7 +55,6 @@ public:
 				readerMode();
 				break;
 			}
-			
 			case 2:
 			{
 				//библиотекарь
@@ -67,7 +66,6 @@ public:
 			}
 		} while (mode != 0);
 	}
-
 
 
 private:

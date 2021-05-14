@@ -140,17 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
-    <ClCompile Include="Librarian.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Reader.cpp" />
-    <ClCompile Include="ReadersContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
     <ClInclude Include="BooksBorrowingLogsContainer.h" />
     <ClInclude Include="BooksContainer.h" />
     <ClInclude Include="input.h" />
-    <ClInclude Include="Librarian.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="Reader.h" />
     <ClInclude Include="ReadersContainer.h" />

@@ -7,8 +7,6 @@ class Reader
 	int id;
 	string firstName, secondName;
 
-	//list<int> container; //список книг, которые на руках у пользователя
-
 public:
 	Reader() {
 		this->id = -1;
@@ -33,13 +31,5 @@ public:
 	friend bool operator==(const Reader& left, const Reader& right);
 	friend istream& operator>>(istream& in, Reader& reader);
 	friend ostream& operator<<(ostream& out, const Reader& reader);
-
-	//void borowBook(Book& book) {
-	//	container.push_back(book.getId());
-	//}
-	//
-	//void returnBook(Book& book) {
-	//	container.remove(book.getId());
-	//}
 };
 
